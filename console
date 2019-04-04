@@ -5,9 +5,9 @@ function install()
     PROJECT_NAME=$1
     PROJECT_EMAIL=$2
 
-    if [[ -e ./${PROJECT_NAME} ]]; then
+    if [[ -e ./docker ]]; then
         echo "Removing previous version..."
-        rm -Rf ./docker/
+        rm -Rf ./docker/*
     fi
 
     if [[ -z "$PROJECT_NAME" ]]; then
@@ -44,8 +44,8 @@ function install()
     rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
 
     # ./docker/images/project-name/
-    DIR_PATH="./docker/images/project-name"
-    mv ${DIR_PATH} "./docker/images/${PROJECT_NAME}"
+    DIR_PATH="./docker/images/project-name/"
+    mv ${DIR_PATH} "./docker/images/${PROJECT_NAME}/"
 
     # ./docker/images/project-name/Dockerfile
     FILE_PATH="./docker/images/${PROJECT_NAME}/Dockerfile"
