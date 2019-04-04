@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+function install()
+{
+    PROJECT_NAME=$1
+    PROJECT_EMAIL=$2
+
+    if [[ -e ./${PROJECT_NAME} ]]; then
+        echo "Removing previous version..."
+        rm -Rf ./docker/
+    fi
+
+    if [[ -z "$PROJECT_NAME" ]]; then
+        echo "Project name cannot be empty"
+        exit
+    fi
+
+    if [[ -z "$PROJECT_EMAIL" ]]; then
+        echo "E-mail address cannot be empty"
+        exit
+    fi
+
+    echo "Installing..."
+    PROJECT_DIR=${PROJECT_NAME}
+    BACKUP_EXTENSION=".back"
+
+    cp -R ./docker-setup-pack/ ./docker
+
+    # ./docker/container-fs/etc/apache2/sites-enabled/project-name.local.conf
+    FILE_PATH="./docker/container-fs/etc/apache2/sites-enabled/${PROJECT_NAME}.local.conf"
+    mv ./docker/container-fs/etc/apache2/sites-enabled/project-name.local.conf ${FILE_PATH}
+    sed -i${BACKUP_EXTENSION} "s/@project-name@/${PROJECT_NAME}/g" ${FILE_PATH}
+    sed -i${BACKUP_EXTENSION} "s/@project-email@/${PROJECT_EMAIL}/g" ${FILE_PATH}
+    rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
+
+    # ./docker/container-fs/etc/apache2/apache2.conf
+    FILE_PATH="./docker/container-fs/etc/apache2/apache2.conf"
+    sed -i${BACKUP_EXTENSION} "s/@project-name@/${PROJECT_NAME}/g" ${FILE_PATH}
+    rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
+
+    # ./docker/container-fs/root/init-lamp.sh
+    FILE_PATH="./docker/container-fs/root/init-lamp.sh"
+    sed -i${BACKUP_EXTENSION} "s/@project-name@/${PROJECT_NAME}/g" ${FILE_PATH}
+    rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
+
+    # ./docker/images/project-name/
+    DIR_PATH="./docker/images/project-name"
+    mv ${DIR_PATH} "./docker/images/${PROJECT_NAME}"
+
+    # ./docker/images/project-name/Dockerfile
+    FILE_PATH="./docker/images/${PROJECT_NAME}/Dockerfile"
+    sed -i${BACKUP_EXTENSION} "s/@project-name@/${PROJECT_NAME}/g" ${FILE_PATH}
+    rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
+
+    # ./docker/docker-compose.yml
+    FILE_PATH="./docker/docker-compose.yml"
+    sed -i${BACKUP_EXTENSION} "s/@project-name@/${PROJECT_NAME}/g" ${FILE_PATH}
+    rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
+
+    rm -Rf ./public && mkdir ./public
+    cp ./docker-setup-pack/public/index.html ./public
+
+    echo "Installation done."
+}
+
+function xdebug()
+{
+    echo "XDEBUG"
+}
+MODE=$1
+[[ -z $MODE ]] || shift
+
+if [[ ${MODE} == "install" ]]; then
+    install "$@"
+elif [[ ${MODE} == "xdebug" ]]; then
+    xdebug "$@"
+else
+    echo -e "Docker Console"
+    echo -e ""
+    echo -e "Usage: $0 COMMAND [OPTIONS...]"
+    echo -e ""
+    echo -e "List of available commands:"
+    echo -e "   install <project-name> <e-mail>                               - installs whole project"
+    echo -e "   xdebug start|stop                                             - starts or stops xdebug"
+fi
