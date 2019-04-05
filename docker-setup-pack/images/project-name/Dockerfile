@@ -1,4 +1,4 @@
-FROM ubuntu:17.10
+FROM ubuntu:18.10
 
 # Set the locale
 RUN apt-get clean && apt-get update && apt-get install -y locales
@@ -12,6 +12,11 @@ ENV LC_ALL                                 en_US.UTF-8
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get -y --force-yes update
 
+# https://serverfault.com/a/949998
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt-get install -y tzdata \
+    && ln -fs /usr/share/zoneinfo/Europe/Warsaw /etc/localtime \
+    && dpkg-reconfigure --frontend noninteractive tzdata
 
 # Environment
 RUN DEBIAN_FRONTEND=noninteractive \
@@ -22,46 +27,40 @@ RUN DEBIAN_FRONTEND=noninteractive \
     lsof
 
 
-# Unofficial PHP7.1 repository
+# Unofficial PHP7.2 repository
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get -y --force-yes update && \
     apt-get -y --force-yes install software-properties-common && \
-    apt-get -y --force-yes install python-software-properties && \
     add-apt-repository -y ppa:ondrej/php
 
 RUN apt-get install -y curl
-
-RUN curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -- && apt-get install -y nodejs
-
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
-    sudo apt-get update && sudo apt-get install -y yarn
 
 # Apache, PHP and other dependencies
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get -y --force-yes update && \
     apt-get -y --force-yes install \
     apache2 \
-    libapache2-mod-php7.1 \
-    php7.1 \
-    php7.1-fpm \
-    php7.1-gd \
-    php7.1-mysql \
-    php7.1-curl \
-    php7.1-cli \
-    php7.1-intl \
-    php7.1-common \
-    php7.1-sqlite \
-    php7.1-dom \
-    php7.1-simplexml \
-    php7.1-xmlwriter \
-    php7.1-mbstring \
-    php7.1-mcrypt \
-    php7.1-dev \
-    php7.1-bcmath \
-    php7.1-zip \
-    php7.1-soap \
-    php7.1-xdebug \
+    php7.2 \
+    php7.2-common php7.2-cli php7.2-fpm \
+    libapache2-mod-php7.2 \
+    php7.2 \
+    php7.2-fpm \
+    php7.2-gd \
+    php7.2-mysql \
+    php7.2-curl \
+    php7.2-cli \
+    php7.2-intl \
+    php7.2-common \
+    php7.2-sqlite \
+    php7.2-dom \
+    php7.2-simplexml \
+    php7.2-xmlwriter \
+    php7.2-mbstring \
+    php7.2-dev \
+    php7.2-bcmath \
+    php7.2-zip \
+    php7.2-soap \
+    php7.2-xdebug \
     php-apcu \
     php-xdebug \
     php-pear \
@@ -98,7 +97,7 @@ RUN groupadd -g $USER_GID @project-name@ && \
     useradd --create-home --shell /bin/bash -u $USER_UID -g $USER_GID @project-name@
 
 
-RUN sed -e 's/;clear_env = no/clear_env = no/' -i /etc/php/7.1/fpm/pool.d/www.conf
+RUN sed -e 's/;clear_env = no/clear_env = no/' -i /etc/php/7.2/fpm/pool.d/www.conf
 
 # Composer
 ENV COMPOSER_HOME /usr/local/composer

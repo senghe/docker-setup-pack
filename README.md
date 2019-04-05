@@ -9,10 +9,10 @@ If you want to setup basic docker configuration for PHP and Symfony, this projec
 
 ## Software installed
 
-- Ubuntu 17.10
+- Ubuntu 18.10
 - Apache2
 - MariaDB 10.1.10
-- PHP 7.1
+- PHP 7.2
 - Composer
 
 ## Apache configuration

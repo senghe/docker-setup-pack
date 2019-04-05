@@ -8,7 +8,7 @@ source /etc/profile
 rm /etc/apache2/sites-enabled/000-default.conf
 
 /etc/init.d/apache2 start
-/etc/init.d/php7.1-fpm start
+/etc/init.d/php7.2-fpm start
 
 echo "Waiting for MySQL (Ctrl+C to break)"
 while ! mysqladmin ping -h"${ENV__DATABASE__HOST}" --silent; do
