@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function install()
+function command_install()
 {
     PROJECT_NAME=$1
     PROJECT_EMAIL=$2
@@ -69,18 +69,25 @@ function install()
     echo "Installation done."
 }
 
-function xdebug()
+function command_xdebug()
 {
     docker exec -u root @project-name@_lamp /scripts/xdebug-switch.sh
+}
+
+function command_bash()
+{
+    docker exec -it -u root -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -e TERM="$TERM" @project-name@_lamp /bin/bash
 }
 
 MODE=$1
 [[ -z $MODE ]] || shift
 
 if [[ ${MODE} == "install" ]]; then
-    install "$@"
+    command_install "$@"
 elif [[ ${MODE} == "xdebug" ]]; then
-    xdebug "$@"
+    command_xdebug "$@"
+elif [[ ${MODE} == "bash" ]]; then
+    command_bash "$@"
 else
     echo -e "Docker Console"
     echo -e ""

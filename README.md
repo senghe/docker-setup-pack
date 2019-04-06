@@ -8,6 +8,8 @@ If you want to setup basic docker configuration for PHP and Symfony, this projec
 
 ```./console xdebug``` - starts or stops xdebug depending on its current state
 
+```./console bash``` - logs into lamp container
+
 ## Software installed
 
 - Ubuntu 18.10
