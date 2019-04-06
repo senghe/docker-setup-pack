@@ -60,13 +60,20 @@ function install()
     rm -Rf ./public && mkdir ./public
     cp ./docker-setup-pack/public/index.html ./public
 
+    # ./docker/console
+    FILE_PATH="./docker/console"
+    cp ./console ${FILE_PATH}
+    sed -i${BACKUP_EXTENSION} "s/@project-name@/${PROJECT_NAME}/g" ${FILE_PATH}
+    rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
+
     echo "Installation done."
 }
 
 function xdebug()
 {
-    echo "XDEBUG"
+    docker exec -u root @project-name@_lamp /scripts/xdebug-switch.sh
 }
+
 MODE=$1
 [[ -z $MODE ]] || shift
 
@@ -81,5 +88,5 @@ else
     echo -e ""
     echo -e "List of available commands:"
     echo -e "   install <project-name> <e-mail>                               - installs whole project"
-    echo -e "   xdebug start|stop                                             - starts or stops xdebug"
+    echo -e "   xdebug                                                        - starts or stops xdebug depending on its current state"
 fi
