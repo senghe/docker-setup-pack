@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set-env-vars.sh
-setup-xdebug.sh
 source /etc/profile
 
 # Start servers
