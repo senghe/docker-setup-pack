@@ -5,6 +5,7 @@ If you want to setup basic docker configuration for PHP and Symfony, this projec
 ## Usage
 
 ```./console install project-name project-email``` - initializes whole project
+
 ```./console xdebug``` - starts or stops xdebug depending on its current state
 
 ## Software installed
