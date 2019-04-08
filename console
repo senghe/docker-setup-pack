@@ -52,9 +52,12 @@ function command_install()
     sed -i${BACKUP_EXTENSION} "s/@project-name@/${PROJECT_NAME}/g" ${FILE_PATH}
     rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
 
+    CURRENT_WORKING_DIRECTORY=`pwd`
+
     # ./docker/docker-compose.yml
     FILE_PATH="./docker/docker-compose.yml"
     sed -i${BACKUP_EXTENSION} "s/@project-name@/${PROJECT_NAME}/g" ${FILE_PATH}
+    sed -i${BACKUP_EXTENSION} "s|@project-working-directory@|${CURRENT_WORKING_DIRECTORY}|g" ${FILE_PATH}
     rm -Rf ${FILE_PATH}${BACKUP_EXTENSION}
 
     rm -Rf ./public && mkdir ./public

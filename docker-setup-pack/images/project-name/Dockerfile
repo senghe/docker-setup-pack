@@ -88,8 +88,6 @@ ENV ENV__DATABASE__USER            root
 ENV ENV__DATABASE__PASSWORD        password
 ENV ENV__DATABASE__PORT            3306
 
-VOLUME /var/www/@project-name@/
-
 RUN a2enmod rewrite headers
 
 # Do not use chmod or setfacl with user @project-name@ beacuse UID and GID for this user will change on container startup!
